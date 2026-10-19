@@ -129,7 +129,18 @@ Out-of-range or missing fields get a `422` response.
 | Item | Location |
 |------|----------|
 | Report (16 pages, PDF) | `report/report.pdf` (source `report/report.html`) |
+| Lab implementation report (8 pages, PDF) | `report/lab_report.pdf`: the pipeline reproduced on the BITS Prayogshala MLOps lab VM |
 | Architecture diagram | `report/figures/architecture.png` |
 | Screenshots | `screenshots/` (MLflow, tests, local and GitHub Actions CI runs, Docker, Swagger, Kubernetes, Helm, Prometheus, logs, Grafana) |
 | Pipeline video | `video/pipeline_demo.mp4`, 1 min 48 s captioned walkthrough including GitHub Actions |
 | CI logs | `ci_logs/` (passing run, and runs stopped by a lint error and by a failing test) |
+
+## Run on the BITS Prayogshala lab VM
+
+```bash
+cd ~/workspace
+git clone https://github.com/callmejei/mlops_2025ae05470_assignment.git
+bash mlops_2025ae05470_assignment/scripts/lab_setup.sh 2>&1 | tee ~/workspace/lab_setup.log
+```
+
+This runs the CI pipeline, starts Docker Compose, deploys to minikube (manifest and Helm, exposed via `minikube tunnel`), starts the MLflow UI and checks every endpoint. The evidence is in `report/lab_report.pdf` and `screenshots/lab/`.

@@ -1,5 +1,7 @@
 # Heart Disease Risk — End-to-End MLOps
 
+Repository: https://github.com/callmejei/mlops_2025ae05470_assignment
+
 A classifier trained on the UCI Heart Disease (Cleveland) dataset. It's served as a FastAPI service in Docker, deployed to local Kubernetes and monitored with Prometheus and Grafana.
 
 ```

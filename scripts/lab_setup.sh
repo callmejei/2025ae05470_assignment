@@ -35,7 +35,6 @@ step "Kubernetes: minikube"
 minikube status >/dev/null 2>&1 || minikube start --driver=docker --cpus=2 --memory=4096
 minikube image load heart-disease-api:latest
 mkdir -p "$BIN"
-ln -sf "$(command -v minikube)" "$BIN/minikube"
 cat > "$BIN/kubectl" <<'EOF'
 #!/usr/bin/env bash
 exec minikube kubectl -- "$@"

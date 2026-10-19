@@ -1,5 +1,8 @@
 # Heart Disease Risk — End-to-End MLOps
 
+**Machine Learning Operations (MLOps) · AIMLCZG523 · Assignment 01**
+**Student:** Jeyaram M · **ID:** 2025AE05470
+
 Repository: https://github.com/callmejei/mlops_2025ae05470_assignment
 
 A classifier trained on the UCI Heart Disease (Cleveland) dataset. It's served as a FastAPI service in Docker, deployed to local Kubernetes and monitored with Prometheus and Grafana.
@@ -128,5 +131,5 @@ Out-of-range or missing fields get a `422` response.
 | Report (16 pages, PDF) | `report/report.pdf` (source `report/report.html`) |
 | Architecture diagram | `report/figures/architecture.png` |
 | Screenshots | `screenshots/` (MLflow, tests, local and GitHub Actions CI runs, Docker, Swagger, Kubernetes, Helm, Prometheus, logs, Grafana) |
-| Pipeline video | `video/pipeline_demo.webm` (1.5 min walkthrough with captions) |
+| Pipeline video | `video/pipeline_demo.mp4` (also `.webm`), 1 min 48 s captioned walkthrough including GitHub Actions |
 | CI logs | `ci_logs/` (passing run, and runs stopped by a lint error and by a failing test) |

@@ -2,7 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <title>Heart Disease MLOps Report</title>
 <style>
-  @page { size: A4; margin: 16mm 15mm 16mm 15mm; }
+  @page { size: A4; margin: 16mm 15mm 16mm 15mm;
+    @bottom-left { content: "Jeyaram M · 2025AE05470 · AIMLCZG523 MLOps Assignment 01"; font: 8pt "Segoe UI", Arial, sans-serif; color: #64748b; }
+    @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 8pt "Segoe UI", Arial, sans-serif; color: #64748b; } }
   :root { --ink:#0f172a; --mut:#475569; --line:#cbd5e1; --acc:#1d4ed8; --bg:#f8fafc; }
   body { font: 10.5pt/1.5 "Segoe UI", Arial, sans-serif; color: var(--ink); margin: 0; }
   h1 { font-size: 20pt; margin: 0 0 6px; color: var(--acc); }
@@ -31,16 +33,19 @@
 
 <!-- 1. Cover -->
 <section class="cover">
-  <div style="font-size:11pt;color:var(--acc);font-weight:700;letter-spacing:1px">MLOPS EXPERIMENTAL LEARNING ASSIGNMENT</div>
+  <div style="font-size:11pt;color:var(--acc);font-weight:700;letter-spacing:1px">MACHINE LEARNING OPERATIONS (MLOps) · AIMLCZG523</div>
+  <div style="font-size:11pt;color:var(--mut);font-weight:600;margin:2px 0 14px">Assignment 01 · MLOps Experimental Learning Assignment · Total marks 50</div>
   <h1>Heart Disease Risk Prediction<br>End-to-End MLOps Pipeline</h1>
   <div class="sub">Model development, experiment tracking, CI/CD, containerization, Kubernetes deployment and monitoring</div>
   <table>
+    <tr><th>Student name</th><td><b>Jeyaram M</b></td></tr>
+    <tr><th>Student ID</th><td><b>2025AE05470</b></td></tr>
+    <tr><th>Course</th><td>Machine Learning Operations (MLOps), AIMLCZG523</td></tr>
     <tr><th>Dataset</th><td>UCI Heart Disease (Cleveland), 303 patients, 13 features</td></tr>
     <tr><th>Final model</th><td>Logistic Regression (C = 0.1), CV ROC-AUC 0.911, test ROC-AUC 0.961</td></tr>
     <tr><th>Serving</th><td>FastAPI in Docker, with Docker Compose and Kubernetes (manifest + Helm)</td></tr>
     <tr><th>Tooling</th><td>scikit-learn, MLflow, pytest, flake8, GitHub Actions, Prometheus, Grafana</td></tr>
     <tr><th>Repository</th><td><a href="https://github.com/callmejei/mlops_2025ae05470_assignment">https://github.com/callmejei/mlops_2025ae05470_assignment</a></td></tr>
-    <tr><th>Author</th><td>Keerthana S</td></tr>
     <tr><th>Date</th><td>19 October 2026</td></tr>
   </table>
   <h3 style="margin-top:30px">Contents</h3>
@@ -343,7 +348,7 @@ helm --kube-context docker-desktop upgrade --install heart-api helm/heart-api \
     <tr><td>Screenshots</td><td><code>screenshots/</code></td></tr>
     <tr><td>Report</td><td><code>report/report.pdf</code></td></tr>
     <tr><td>Access instructions</td><td>Section 2 and <code>README.md</code></td></tr>
-    <tr><td>Pipeline video</td><td><code>video/pipeline_demo.webm</code></td></tr>
+    <tr><td>Pipeline video</td><td><code>video/pipeline_demo.mp4</code> (also .webm)</td></tr>
   </table>
   <h3>Repository</h3>
   <p><a href="https://github.com/callmejei/mlops_2025ae05470_assignment">https://github.com/callmejei/mlops_2025ae05470_assignment</a></p>

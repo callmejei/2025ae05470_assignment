@@ -11,3 +11,5 @@ predict.json
 train.log
 !ci_logs/*.log
 video/*.webm
+.playwright-mcp/
+Prayogshala_Virtual_Lab_Manual.pdf

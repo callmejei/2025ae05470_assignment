@@ -10,3 +10,4 @@ video/_raw/
 predict.json
 train.log
 !ci_logs/*.log
+video/*.webm

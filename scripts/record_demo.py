@@ -1,4 +1,4 @@
-"""Record a browser walkthrough of the pipeline (video/pipeline_demo.webm).
+"""Record a browser walkthrough of the pipeline (video/pipeline_demo.mp4).
 
 Needs the same running services as capture_screenshots.py.
 Usage:  python scripts/record_demo.py

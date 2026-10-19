@@ -23,10 +23,11 @@
   .row { display: flex; gap: 10px; } .row > div { flex: 1; }
   .note { background: #eff6ff; border-left: 4px solid var(--acc); padding: 6px 10px; margin: 8px 0; }
   ul { margin: 4px 0 4px 18px; padding: 0; } li { margin: 2px 0; }
-  .cover { height: 255mm; display: flex; flex-direction: column; justify-content: center; }
+  .cover { display: flex; flex-direction: column; padding-top: 12mm; }
   .cover h1 { font-size: 30pt; color: var(--ink); line-height: 1.2; }
   .cover .sub { font-size: 14pt; color: var(--mut); margin: 6px 0 30px; }
   .cover table { width: 75%; font-size: 10.5pt; }
+  .cover th { white-space: nowrap; }
   .toc li { margin: 4px 0; }
 </style></head>
 <body>
@@ -348,7 +349,7 @@ helm --kube-context docker-desktop upgrade --install heart-api helm/heart-api \
     <tr><td>Screenshots</td><td><code>screenshots/</code></td></tr>
     <tr><td>Report</td><td><code>report/report.pdf</code></td></tr>
     <tr><td>Access instructions</td><td>Section 2 and <code>README.md</code></td></tr>
-    <tr><td>Pipeline video</td><td><code>video/pipeline_demo.mp4</code> (also .webm)</td></tr>
+    <tr><td>Pipeline video</td><td><code>video/pipeline_demo.mp4</code></td></tr>
   </table>
   <h3>Repository</h3>
   <p><a href="https://github.com/callmejei/mlops_2025ae05470_assignment">https://github.com/callmejei/mlops_2025ae05470_assignment</a></p>

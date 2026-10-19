@@ -256,7 +256,17 @@ helm --kube-context docker-desktop upgrade --install heart-api helm/heart-api \
   <p class="cap">Fig 12. Full pipeline run: every stage passes</p>
   <img src="../screenshots/06_ci_fail.png" style="max-height:95mm">
   <p class="cap">Fig 13. Fail-fast: an injected lint error, and separately a failing test, each stop the pipeline with exit code 1 and clear logs</p>
-  <div class="note">GitHub Actions run screenshots are added after the repository is pushed and the first workflow run finishes.</div>
+  </section>
+
+<section class="page">
+  <h3>GitHub Actions runs</h3>
+  <img src="../screenshots/17_github_actions_run_success.png" style="max-height:105mm">
+  <p class="cap">Fig 14. GitHub Actions run #2: lint-test-train then docker, both green (1 min 53 s, 1 artifact)</p>
+  <img src="../screenshots/18_github_actions_job_steps.png" style="max-height:105mm">
+  <p class="cap">Fig 15. lint-test-train job steps: lint, unit tests, data, EDA, train, artifact upload</p>
+  <p>Run #1 failed at <b>Unit tests</b>. CI calls <code>pytest</code> directly, which does not put the repo root on <code>sys.path</code>, so <code>import src</code> failed. The data, training and docker steps were skipped, which is the expected fail-fast behaviour. Adding <code>pythonpath = .</code> to the pytest config fixed it in run #2.</p>
+  <img src="../screenshots/19_github_actions_run_failed.png" style="max-height:70mm">
+  <p class="cap">Fig 16. Run #1 stopped at the failing step; later jobs skipped</p>
 </section>
 
 <!-- 8. Container -->
@@ -272,14 +282,14 @@ helm --kube-context docker-desktop upgrade --install heart-api helm/heart-api \
                 "thalach":150,"exang":1,"oldpeak":2.3,"slope":3,"ca":2,"thal":7}
 → 200 {"prediction":1,"label":"disease","probability_disease":0.9478,"confidence":0.9478,"model_version":"1.0.0"}</pre>
   <img src="../screenshots/07_docker_compose.png" style="max-height:55mm">
-  <p class="cap">Fig 14. Docker Compose stack: API (healthy), Prometheus, Grafana</p>
+  <p class="cap">Fig 17. Docker Compose stack: API (healthy), Prometheus, Grafana</p>
   <img src="../screenshots/08_curl_predict.png" style="max-height:60mm">
-  <p class="cap">Fig 15. Container proof: health check, a valid prediction, and a rejected invalid request</p>
+  <p class="cap">Fig 18. Container proof: health check, a valid prediction, and a rejected invalid request</p>
 </section>
 
 <section class="page">
   <img src="../screenshots/09_swagger_predict.png" style="max-height:245mm">
-  <p class="cap">Fig 16. Swagger UI: /predict executed against the container</p>
+  <p class="cap">Fig 19. Swagger UI: /predict executed against the container</p>
 </section>
 
 <!-- 9. Deployment -->
@@ -295,9 +305,9 @@ helm --kube-context docker-desktop upgrade --install heart-api helm/heart-api \
   </table>
   <p>Both use readiness and liveness probes on <code>/health</code>, CPU and memory requests and limits, and <code>prometheus.io/scrape</code> annotations. The Helm chart passes <code>helm lint</code>. Moving to a cloud cluster (GKE/EKS/AKS) only means pushing the image to a registry and changing <code>image.repository</code>.</p>
   <img src="../screenshots/10_k8s_manifest.png" style="max-height:70mm">
-  <p class="cap">Fig 17. Manifest deployment: 2/2 pods running, LoadBalancer, endpoint verified</p>
+  <p class="cap">Fig 20. Manifest deployment: 2/2 pods running, LoadBalancer, endpoint verified</p>
   <img src="../screenshots/11_k8s_helm.png" style="max-height:75mm">
-  <p class="cap">Fig 18. Helm release deployed and verified</p>
+  <p class="cap">Fig 21. Helm release deployed and verified</p>
 </section>
 
 <!-- 10. Monitoring -->
@@ -309,18 +319,18 @@ helm --kube-context docker-desktop upgrade --install heart-api helm/heart-api \
     <li><b>Prometheus</b> scrapes <code>api:8000/metrics</code> every 5 s. <b>Grafana</b> is provisioned automatically with the data source and the "Heart Disease API" dashboard.</li>
   </ul>
   <img src="../screenshots/14_api_logs.png" style="max-height:45mm">
-  <p class="cap">Fig 19. Structured JSON request and prediction logs</p>
+  <p class="cap">Fig 22. Structured JSON request and prediction logs</p>
   <img src="../screenshots/15_grafana_dashboard.png" style="max-height:105mm">
-  <p class="cap">Fig 20. Grafana: total predictions, error rate, p95 latency, class mix, request rate and latency percentiles</p>
+  <p class="cap">Fig 23. Grafana: total predictions, error rate, p95 latency, class mix, request rate and latency percentiles</p>
   <img src="../screenshots/12_prometheus_targets.png" style="max-height:48mm">
-  <p class="cap">Fig 21. Prometheus target healthy</p>
+  <p class="cap">Fig 24. Prometheus target healthy</p>
 </section>
 
 <!-- 11. Architecture -->
 <section class="page">
   <h2>11. Architecture, deliverables and repository</h2>
   <img src="figures/architecture.png">
-  <p class="cap">Fig 22. End-to-end architecture</p>
+  <p class="cap">Fig 25. End-to-end architecture</p>
   <h3>Deliverables checklist</h3>
   <table>
     <tr><th>Deliverable</th><th>Location</th></tr>

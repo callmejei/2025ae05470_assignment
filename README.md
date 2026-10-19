@@ -125,8 +125,8 @@ Out-of-range or missing fields get a `422` response.
 
 | Item | Location |
 |------|----------|
-| Report (14 pages, PDF) | `report/report.pdf` (source `report/report.html`) |
+| Report (16 pages, PDF) | `report/report.pdf` (source `report/report.html`) |
 | Architecture diagram | `report/figures/architecture.png` |
-| Screenshots | `screenshots/` (MLflow, tests, CI pass and fail, Docker, Swagger, Kubernetes, Helm, Prometheus, logs, Grafana) |
+| Screenshots | `screenshots/` (MLflow, tests, local and GitHub Actions CI runs, Docker, Swagger, Kubernetes, Helm, Prometheus, logs, Grafana) |
 | Pipeline video | `video/pipeline_demo.webm` (1.5 min walkthrough with captions) |
 | CI logs | `ci_logs/` (passing run, and runs stopped by a lint error and by a failing test) |

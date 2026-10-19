@@ -44,6 +44,13 @@ chmod +x "$BIN/kubectl"
 kubectl apply -f k8s/deployment.yaml
 kubectl -n heart-disease rollout status deploy/heart-api --timeout=180s
 
+step "LoadBalancer tunnel (minikube tunnel, background)"
+pgrep -f "minikube tunnel" >/dev/null || nohup minikube tunnel >"$HOME/minikube-tunnel.log" 2>&1 &
+for i in $(seq 1 30); do
+  ip=$(kubectl -n heart-disease get svc heart-api -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || true)
+  [ -n "$ip" ] && break; sleep 2
+done
+
 step "Helm chart"
 if ! command -v helm >/dev/null; then
   curl -sSL https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz | tar -xz -C /tmp
@@ -51,13 +58,6 @@ if ! command -v helm >/dev/null; then
 fi
 helm upgrade --install heart-api helm/heart-api -n heart-disease-helm --create-namespace \
   --wait --timeout 180s
-
-step "LoadBalancer tunnel (minikube tunnel, background)"
-pgrep -f "minikube tunnel" >/dev/null || nohup minikube tunnel >"$HOME/minikube-tunnel.log" 2>&1 &
-for i in $(seq 1 30); do
-  ip=$(kubectl -n heart-disease get svc heart-api -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || true)
-  [ -n "$ip" ] && break; sleep 2
-done
 kubectl get svc -A | grep heart-api
 
 step "MLflow UI :5005 (background)"

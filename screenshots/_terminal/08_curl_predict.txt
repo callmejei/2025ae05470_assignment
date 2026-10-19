@@ -1,0 +1,8 @@
+$ curl localhost:8010/health
+{"status":"ok","model_version":"1.0.0"}
+
+$ curl -X POST localhost:8010/predict -H "Content-Type: application/json" -d @sample_request.json
+{"prediction":1,"label":"disease","probability_disease":0.9478,"confidence":0.9478,"model_version":"1.0.0"}
+
+$ curl -X POST localhost:8010/predict -d {"age": 63}     # invalid input
+{"detail":[{"type":"missing","loc":["body","sex"],"msg":"Field required","input":{"age":63}},{"type":"missing","loc":["body","cp"],"msg":"Field required","input":{"age":63}},{"type":"missing","loc":["body","trestbps"],"msg":"Field required","input":{"age":63}},{"type":"missing","loc":["body","chol"],"msg":"Field required","input":{"age":63}},{"type":"missing","loc":["body","fbs"],"msg":"Field requ ...

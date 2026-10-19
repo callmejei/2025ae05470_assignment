@@ -1,0 +1,43 @@
+
+===== [11:04:28] Lint (flake8) =====
+flake8: no issues
+
+===== [11:04:29] Unit tests (pytest) =====
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-8.3.3, pluggy-1.7.0
+rootdir: D:\mlops
+configfile: setup.cfg
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.13.5
+collected 14 items
+
+tests\test_api.py .....                                                  [ 35%]
+tests\test_data.py .....                                                 [ 71%]
+tests\test_model.py ....                                                 [100%]
+
+---------------- generated xml file: D:\mlops\test-results.xml ----------------
+============================= 14 passed in 8.08s ==============================
+
+===== [11:04:38] Download & clean data =====
+INFO Raw data already present at D:\mlops\data\raw\processed.cleveland.data
+INFO Saved 303 rows to D:\mlops\data\processed\heart_clean.csv (positive rate 0.46)
+
+===== [11:04:39] EDA figures =====
+wrote D:\mlops\report\figures\class_balance.png
+wrote D:\mlops\report\figures\numeric_histograms.png
+wrote D:\mlops\report\figures\categorical_counts.png
+wrote D:\mlops\report\figures\correlation_heatmap.png
+
+===== [11:04:42] Train & track (MLflow) =====
+INFO logistic_regression best={'model__C': 0.1, 'model__penalty': 'l2'} cv_roc_auc=0.911 test_roc_auc=0.961
+INFO random_forest best={'model__max_depth': None, 'model__min_samples_leaf': 3, 'model__n_estimators': 100} cv_roc_auc=0.900 test_roc_auc=0.945
+INFO Selected logistic_regression -> D:\mlops\models\model.joblib
+
+===== [11:04:58] Docker build =====
+sha256:7238dd5546d4f826ea801672e88a235c4fe9917ab235be8abdb0c363623c8bc3
+
+===== [11:04:58] Container smoke test =====
+{"status":"ok","model_version":"1.0.0"}
+{"prediction":1,"label":"disease","probability_disease":0.9478,"confidence":0.9478,"model_version":"1.0.0"}
+
+===== [11:05:03] PIPELINE PASSED =====

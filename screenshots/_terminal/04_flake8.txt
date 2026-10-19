@@ -1,0 +1,2 @@
+$ flake8 src api tests && echo OK
+OK

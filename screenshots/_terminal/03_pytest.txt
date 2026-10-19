@@ -1,0 +1,23 @@
+$ pytest -v
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-8.3.3, pluggy-1.7.0 -- D:\mlops\.venv\Scripts\python.exe
+rootdir: D:\mlops
+configfile: setup.cfg
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.13.5
+collecting ... collected 14 items
+tests/test_api.py::test_health PASSED                                    [  7%]
+tests/test_api.py::test_predict_returns_prediction_and_confidence PASSED [ 14%]
+tests/test_api.py::test_predict_rejects_missing_field PASSED             [ 21%]
+tests/test_api.py::test_predict_rejects_out_of_range PASSED              [ 28%]
+tests/test_api.py::test_metrics_exposed PASSED                           [ 35%]
+tests/test_data.py::test_clean_removes_missing_values PASSED             [ 42%]
+tests/test_data.py::test_clean_binarises_target PASSED                   [ 50%]
+tests/test_data.py::test_clean_keeps_all_features PASSED                 [ 57%]
+tests/test_data.py::test_clean_drops_duplicates PASSED                   [ 64%]
+tests/test_data.py::test_clean_does_not_mutate_input PASSED              [ 71%]
+tests/test_model.py::test_preprocessor_output_is_scaled_and_encoded PASSED [ 78%]
+tests/test_model.py::test_pipeline_handles_unseen_category PASSED        [ 85%]
+tests/test_model.py::test_predict_output_contract PASSED                 [ 92%]
+tests/test_model.py::test_train_end_to_end PASSED                        [100%]
+============================= 14 passed in 8.02s ==============================

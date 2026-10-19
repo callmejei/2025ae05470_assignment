@@ -1,0 +1,61 @@
+{
+  "uid": "heart-api",
+  "title": "Heart Disease API",
+  "schemaVersion": 39,
+  "refresh": "5s",
+  "time": { "from": "now-15m", "to": "now" },
+  "panels": [
+    {
+      "type": "stat", "title": "Total predictions",
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "sum(model_predictions_total)", "refId": "A" }]
+    },
+    {
+      "type": "stat", "title": "Error rate (5xx / 4xx)",
+      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "percentunit" } },
+      "targets": [{
+        "expr": "sum(rate(api_requests_total{status=~\"4..|5..\"}[1m])) / clamp_min(sum(rate(api_requests_total[1m])), 1e-9)",
+        "refId": "A"
+      }]
+    },
+    {
+      "type": "stat", "title": "p95 latency /predict",
+      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "targets": [{
+        "expr": "histogram_quantile(0.95, sum(rate(api_request_latency_seconds_bucket{endpoint=\"/predict\"}[1m])) by (le))",
+        "refId": "A"
+      }]
+    },
+    {
+      "type": "piechart", "title": "Predictions by class",
+      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "expr": "sum by (label) (model_predictions_total)", "legendFormat": "{{label}}", "refId": "A" }]
+    },
+    {
+      "type": "timeseries", "title": "Request rate by endpoint & status",
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps" } },
+      "targets": [{
+        "expr": "sum by (endpoint, status) (rate(api_requests_total[1m]))",
+        "legendFormat": "{{endpoint}} {{status}}", "refId": "A"
+      }]
+    },
+    {
+      "type": "timeseries", "title": "Latency percentiles /predict",
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "targets": [
+        { "expr": "histogram_quantile(0.50, sum(rate(api_request_latency_seconds_bucket{endpoint=\"/predict\"}[1m])) by (le))", "legendFormat": "p50", "refId": "A" },
+        { "expr": "histogram_quantile(0.95, sum(rate(api_request_latency_seconds_bucket{endpoint=\"/predict\"}[1m])) by (le))", "legendFormat": "p95", "refId": "B" }
+      ]
+    }
+  ]
+}

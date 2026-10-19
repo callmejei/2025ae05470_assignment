@@ -1,0 +1,10 @@
+$ docker compose ps
+NAME                       IMAGE                      STATUS                   PORTS
+heart-mlops-api-1          heart-disease-api:latest   Up 8 minutes (healthy)   0.0.0.0:8010->8000/tcp, [::]:8010->8000/tcp
+heart-mlops-grafana-1      grafana/grafana:11.3.0     Up 8 minutes             0.0.0.0:3005->3000/tcp, [::]:3005->3000/tcp
+heart-mlops-prometheus-1   prom/prometheus:v2.55.1    Up 8 minutes             0.0.0.0:9095->9090/tcp, [::]:9095->9090/tcp
+
+$ docker images heart-disease-api
+IMAGE                      ID             DISK USAGE   CONTENT SIZE   EXTRA
+heart-disease-api:ci       7238dd5546d4        715MB          164MB        
+heart-disease-api:latest   1b3256e8539f        715MB          164MB   U    

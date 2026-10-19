@@ -1,0 +1,7 @@
+$ docker compose logs api | grep -E "\"msg\": \"(request|prediction)\"" | tail -6
+{"ts": "2026-10-19 05:36:28,405", "level": "INFO", "msg": "request", "request_id": "998c5bc3459d", "method": "POST", "path": "/predict", "status": 200, "latency_ms": 7.44}
+{"ts": "2026-10-19 05:36:28,434", "level": "INFO", "msg": "request", "request_id": "8454bdd2a055", "method": "POST", "path": "/predict", "status": 422, "latency_ms": 0.78}
+{"ts": "2026-10-19 05:36:28,902", "level": "INFO", "msg": "prediction", "input": {"age": 55, "sex": 0, "cp": 1, "trestbps": 130, "chol": 200, "fbs": 0, "restecg": 2, "thalach": 170, "exang": 0, "oldpeak": 0.0, "slope": 3, "ca": 0, "thal": 7}, "prediction": 0, "label": "no_disease", "probability_disease": 0.1664, "confidence": 0.8336}
+{"ts": "2026-10-19 05:36:28,903", "level": "INFO", "msg": "request", "request_id": "bba13830dd64", "method": "POST", "path": "/predict", "status": 200, "latency_ms": 5.7}
+{"ts": "2026-10-19 05:36:28,934", "level": "INFO", "msg": "request", "request_id": "8a45ac95c205", "method": "POST", "path": "/predict", "status": 422, "latency_ms": 1.2}
+{"ts": "2026-10-19 05:36:28,958", "level": "INFO", "msg": "request", "request_id": "b9516f90d9a7", "method": "GET", "path": "/health", "status": 200, "latency_ms": 0.64}

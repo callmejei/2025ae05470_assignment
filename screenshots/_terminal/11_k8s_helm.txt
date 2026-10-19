@@ -1,0 +1,14 @@
+$ helm --kube-context docker-desktop list -A
+NAME     	NAMESPACE         	REVISION	UPDATED                              	STATUS  	CHART          	APP VERSION
+heart-api	heart-disease-helm	1       	2026-10-19 11:02:56.1944004 +0530 IST	deployed	heart-api-0.1.0	1.0.0      
+
+$ kubectl --context docker-desktop -n heart-disease-helm get pods,svc
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/heart-api-594455469d-b4pfv   1/1     Running   0          3m33s
+pod/heart-api-594455469d-bzzxf   1/1     Running   0          3m33s
+
+NAME                TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+service/heart-api   LoadBalancer   10.96.223.67   172.18.0.6    8030:31289/TCP   3m33s
+
+$ curl -X POST localhost:8030/predict -d @sample_request.json
+{"prediction":1,"label":"disease","probability_disease":0.9478,"confidence":0.9478,"model_version":"1.0.0"}

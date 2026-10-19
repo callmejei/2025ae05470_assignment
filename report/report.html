@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Heart Disease MLOps Report</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 16mm 15mm; }
+  :root { --ink:#0f172a; --mut:#475569; --line:#cbd5e1; --acc:#1d4ed8; --bg:#f8fafc; }
+  body { font: 10.5pt/1.5 "Segoe UI", Arial, sans-serif; color: var(--ink); margin: 0; }
+  h1 { font-size: 20pt; margin: 0 0 6px; color: var(--acc); }
+  h2 { font-size: 15pt; color: var(--acc); border-bottom: 2px solid var(--acc); padding-bottom: 3px; margin: 0 0 10px; }
+  h3 { font-size: 11.5pt; margin: 14px 0 6px; }
+  p { margin: 6px 0; }
+  .page { page-break-before: always; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 9.5pt; }
+  th, td { border: 1px solid var(--line); padding: 4px 7px; text-align: left; vertical-align: top; }
+  th { background: #e2e8f0; }
+  td.n, th.n { text-align: right; }
+  code, pre { font-family: Consolas, monospace; font-size: 9pt; }
+  pre { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; white-space: pre-wrap; margin: 6px 0; }
+  img { max-width: 100%; display: block; margin: 6px auto; border: 1px solid var(--line); border-radius: 4px; }
+  .cap { text-align: center; color: var(--mut); font-size: 9pt; margin: 0 0 10px; }
+  .row { display: flex; gap: 10px; } .row > div { flex: 1; }
+  .note { background: #eff6ff; border-left: 4px solid var(--acc); padding: 6px 10px; margin: 8px 0; }
+  ul { margin: 4px 0 4px 18px; padding: 0; } li { margin: 2px 0; }
+  .cover { height: 255mm; display: flex; flex-direction: column; justify-content: center; }
+  .cover h1 { font-size: 30pt; color: var(--ink); line-height: 1.2; }
+  .cover .sub { font-size: 14pt; color: var(--mut); margin: 6px 0 30px; }
+  .cover table { width: 75%; font-size: 10.5pt; }
+  .toc li { margin: 4px 0; }
+</style></head>
+<body>
+
+<!-- 1. Cover -->
+<section class="cover">
+  <div style="font-size:11pt;color:var(--acc);font-weight:700;letter-spacing:1px">MLOPS EXPERIMENTAL LEARNING ASSIGNMENT</div>
+  <h1>Heart Disease Risk Prediction<br>End-to-End MLOps Pipeline</h1>
+  <div class="sub">Model development, experiment tracking, CI/CD, containerization, Kubernetes deployment and monitoring</div>
+  <table>
+    <tr><th>Dataset</th><td>UCI Heart Disease (Cleveland), 303 patients, 13 features</td></tr>
+    <tr><th>Final model</th><td>Logistic Regression (C = 0.1), CV ROC-AUC 0.911, test ROC-AUC 0.961</td></tr>
+    <tr><th>Serving</th><td>FastAPI in Docker, with Docker Compose and Kubernetes (manifest + Helm)</td></tr>
+    <tr><th>Tooling</th><td>scikit-learn, MLflow, pytest, flake8, GitHub Actions, Prometheus, Grafana</td></tr>
+    <tr><th>Repository</th><td><b>&lt;add GitHub URL&gt;</b></td></tr>
+    <tr><th>Author</th><td>Keerthana S</td></tr>
+    <tr><th>Date</th><td>19 October 2026</td></tr>
+  </table>
+  <h3 style="margin-top:30px">Contents</h3>
+  <ol class="toc">
+    <li>Problem, dataset and solution overview</li>
+    <li>Setup and installation</li>
+    <li>Data acquisition and exploratory data analysis</li>
+    <li>Feature engineering and model development</li>
+    <li>Experiment tracking</li>
+    <li>Model packaging and reproducibility</li>
+    <li>CI/CD pipeline and automated testing</li>
+    <li>Containerization and API</li>
+    <li>Production deployment (Kubernetes)</li>
+    <li>Monitoring and logging</li>
+    <li>Architecture, deliverables and repository</li>
+  </ol>
+</section>
+
+<!-- 2. Overview -->
+<section class="page">
+  <h2>1. Problem, dataset and solution overview</h2>
+  <p><b>Problem.</b> Predict whether a patient has heart disease from routine clinical measurements, and serve that prediction through a monitored REST API that is ready for the cloud.</p>
+  <p><b>Dataset.</b> UCI Machine Learning Repository, Heart Disease, file <code>processed.cleveland.data</code>. It has 303 rows, 13 input features and the label <code>num</code> (0 = no disease, 1–4 = increasing severity). Following the usual convention, <code>num &gt; 0</code> is mapped to the binary target <code>1</code>.</p>
+  <table>
+    <tr><th>Feature</th><th>Description</th><th>Type</th></tr>
+    <tr><td>age</td><td>Age in years</td><td>numeric</td></tr>
+    <tr><td>sex</td><td>1 = male, 0 = female</td><td>binary</td></tr>
+    <tr><td>cp</td><td>Chest pain type (1 typical angina, 2 atypical, 3 non-anginal, 4 asymptomatic)</td><td>nominal</td></tr>
+    <tr><td>trestbps</td><td>Resting blood pressure (mmHg)</td><td>numeric</td></tr>
+    <tr><td>chol</td><td>Serum cholesterol (mg/dl)</td><td>numeric</td></tr>
+    <tr><td>fbs</td><td>Fasting blood sugar &gt; 120 mg/dl</td><td>binary</td></tr>
+    <tr><td>restecg</td><td>Resting ECG result (0–2)</td><td>nominal</td></tr>
+    <tr><td>thalach</td><td>Maximum heart rate achieved</td><td>numeric</td></tr>
+    <tr><td>exang</td><td>Exercise-induced angina</td><td>binary</td></tr>
+    <tr><td>oldpeak</td><td>ST depression induced by exercise</td><td>numeric</td></tr>
+    <tr><td>slope</td><td>Slope of the peak exercise ST segment (1–3)</td><td>nominal</td></tr>
+    <tr><td>ca</td><td>Number of major vessels coloured by fluoroscopy (0–3)</td><td>numeric (count)</td></tr>
+    <tr><td>thal</td><td>3 normal, 6 fixed defect, 7 reversible defect</td><td>nominal</td></tr>
+  </table>
+  <h3>Solution at a glance</h3>
+  <ul>
+    <li><b>Data:</b> <code>src/data.py</code> downloads, de-duplicates and imputes the data, then writes <code>data/processed/heart_clean.csv</code>.</li>
+    <li><b>Modelling:</b> a single scikit-learn <code>Pipeline</code> (preprocessing + classifier). Logistic Regression and Random Forest are tuned with GridSearchCV and 5-fold stratified cross-validation.</li>
+    <li><b>Tracking:</b> MLflow records the parameters, CV and test metrics, ROC and confusion-matrix plots, and the model for every run.</li>
+    <li><b>Quality gates:</b> flake8 and 14 pytest unit tests run in GitHub Actions (mirrored locally by <code>scripts/ci_local.sh</code>). Any failure stops the pipeline.</li>
+    <li><b>Serving:</b> FastAPI <code>/predict</code> in a slim Python 3.11 image, run with Docker Compose and on Kubernetes (raw manifest and Helm chart).</li>
+    <li><b>Observability:</b> JSON request logs, Prometheus metrics, and a pre-provisioned Grafana dashboard.</li>
+  </ul>
+  <h3>Headline results (held-out test set, n = 61)</h3>
+  <table>
+    <tr><th>Model</th><th class="n">Accuracy</th><th class="n">Precision</th><th class="n">Recall</th><th class="n">F1</th><th class="n">ROC-AUC</th></tr>
+    <tr><td><b>Logistic Regression</b> (selected)</td><td class="n">0.885</td><td class="n">0.839</td><td class="n">0.929</td><td class="n">0.881</td><td class="n">0.961</td></tr>
+    <tr><td>Random Forest</td><td class="n">0.869</td><td class="n">0.813</td><td class="n">0.929</td><td class="n">0.867</td><td class="n">0.945</td></tr>
+  </table>
+</section>
+
+<!-- 3. Setup -->
+<section class="page">
+  <h2>2. Setup and installation</h2>
+  <p><b>Prerequisites:</b> Python 3.11, Docker Desktop (with Kubernetes enabled), kubectl, Helm 3, Git.</p>
+  <h3>Repository layout</h3>
+<pre>mlops/
+├── data/              raw/ (downloaded) · processed/heart_clean.csv
+├── notebooks/         01_eda.ipynb · 02_training.ipynb · 03_inference.ipynb
+├── src/               config · data · eda · features · train · predict
+├── api/main.py        FastAPI service (/predict, /health, /metrics)
+├── tests/             pytest unit tests (data, model, API)
+├── models/            model.joblib · metrics.json
+├── k8s/               deployment.yaml (Namespace, Deployment, LoadBalancer Service)
+├── helm/heart-api/    Helm chart (Deployment, Service, optional Ingress)
+├── monitoring/        prometheus.yml · Grafana datasource + dashboard
+├── .github/workflows/ci.yml
+├── scripts/           ci_local.sh · capture_screenshots.py · record_demo.py
+├── screenshots/ · video/ · report/
+├── Dockerfile · docker-compose.yml · requirements.txt · requirements-api.txt</pre>
+  <h3>1. Environment and training (clean setup)</h3>
+<pre>python -m venv .venv
+.venv\Scripts\activate             # Linux/macOS: source .venv/bin/activate
+pip install -r requirements.txt
+
+python -m src.data                 # download + clean
+python -m src.eda                  # EDA figures -> report/figures
+python -m src.train                # train + MLflow tracking -> models/model.joblib
+pytest &amp;&amp; flake8 src api tests      # tests + lint
+mlflow ui --backend-store-uri ./mlruns --port 5005</pre>
+  <h3>2. Run the stack in Docker</h3>
+<pre>docker compose up -d --build       # API :8010, Prometheus :9095, Grafana :3005
+curl -X POST localhost:8010/predict -H "Content-Type: application/json" -d @sample_request.json</pre>
+  <h3>3. Deploy to local Kubernetes</h3>
+<pre>kubectl --context docker-desktop apply -f k8s/deployment.yaml                   # :8020
+helm --kube-context docker-desktop upgrade --install heart-api helm/heart-api \
+     -n heart-disease-helm --create-namespace                                    # :8030</pre>
+  <h3>Access instructions (local)</h3>
+  <table>
+    <tr><th>Endpoint</th><th>URL</th></tr>
+    <tr><td>API, Swagger UI</td><td>http://localhost:8010/docs</td></tr>
+    <tr><td>API on Kubernetes (manifest / Helm)</td><td>http://localhost:8020/predict · http://localhost:8030/predict</td></tr>
+    <tr><td>Prometheus</td><td>http://localhost:9095</td></tr>
+    <tr><td>Grafana (admin / admin)</td><td>http://localhost:3005/d/heart-api</td></tr>
+    <tr><td>MLflow UI</td><td>http://localhost:5005</td></tr>
+  </table>
+</section>
+
+<!-- 4. EDA -->
+<section class="page">
+  <h2>3. Data acquisition and exploratory data analysis</h2>
+  <h3>Acquisition and cleaning (<code>src/data.py</code>)</h3>
+  <ul>
+    <li>The file is downloaded from the UCI archive with <code>requests</code> and cached in <code>data/raw/</code>. The step is idempotent.</li>
+    <li><code>?</code> is parsed as missing. Only <b>ca (4 rows)</b> and <b>thal (2 rows)</b> have gaps. Both are discrete codes, so they are filled with the mode.</li>
+    <li>Duplicates are dropped, types are coerced to integers, and <code>num</code> becomes the binary <code>target</code>.</li>
+    <li>Result: 303 rows with no missing values. <b>164 no disease / 139 disease</b> (46% positive).</li>
+  </ul>
+  <div class="row">
+    <div><img src="figures/class_balance.png" style="max-height:62mm"><p class="cap">Fig 1. Class balance: close to even, so no resampling is needed</p></div>
+    <div><img src="figures/correlation_heatmap.png" style="max-height:62mm"><p class="cap">Fig 2. Correlation heatmap</p></div>
+  </div>
+  <img src="figures/numeric_histograms.png" style="max-height:82mm">
+  <p class="cap">Fig 3. Numeric feature distributions by target (0 = no disease, 1 = disease)</p>
+  <h3>Key findings</h3>
+  <ul>
+    <li>Strongest correlations with the target: <b>thal 0.52, ca 0.46, exang 0.43, oldpeak 0.42, thalach −0.42, cp 0.41</b>.</li>
+    <li>Patients with disease reach a lower maximum heart rate (mean 139 vs 158 bpm), show more ST depression (1.6 vs 0.6) and are slightly older (56.6 vs 52.6 years).</li>
+    <li>Cholesterol (0.09) and fasting blood sugar (0.03) carry little signal on their own.</li>
+    <li><code>cp</code>, <code>thal</code>, <code>restecg</code> and <code>slope</code> are nominal codes, so they are one-hot encoded rather than treated as ordered numbers.</li>
+  </ul>
+</section>
+
+<section class="page">
+  <img src="figures/categorical_counts.png" style="max-height:100mm">
+  <p class="cap">Fig 4. Categorical features by target. Asymptomatic chest pain (cp = 4), reversible defect (thal = 7) and exercise angina stand out.</p>
+
+  <h2 style="margin-top:14px">4. Feature engineering and model development</h2>
+  <h3>Preprocessing (<code>src/features.py</code>)</h3>
+  <table>
+    <tr><th>Group</th><th>Columns</th><th>Steps</th></tr>
+    <tr><td>Numeric</td><td>age, trestbps, chol, thalach, oldpeak, ca</td><td>SimpleImputer(median) → StandardScaler</td></tr>
+    <tr><td>Categorical</td><td>sex, cp, fbs, restecg, exang, slope, thal</td><td>SimpleImputer(most_frequent) → OneHotEncoder(handle_unknown="ignore")</td></tr>
+  </table>
+  <p>This gives 25 engineered features. The <code>ColumnTransformer</code> sits inside the same <code>Pipeline</code> as the classifier, so it is fitted only on training folds (no leakage) and the identical transform runs at serving time.</p>
+  <h3>Model selection and tuning (<code>src/train.py</code>)</h3>
+  <ul>
+    <li>Stratified 80/20 train/test split (seed 42). Tuning uses only the training set.</li>
+    <li>GridSearchCV with 5-fold StratifiedKFold, optimising ROC-AUC.</li>
+    <li><b>Logistic Regression:</b> C ∈ {0.01, 0.1, 1, 10}, L2 penalty. Best C = 0.1 (strong regularisation suits n = 242).</li>
+    <li><b>Random Forest:</b> n_estimators ∈ {100, 300}, max_depth ∈ {None, 4, 8}, min_samples_leaf ∈ {1, 3}. Best: 100 trees, unlimited depth, min_samples_leaf = 3.</li>
+    <li>The best model is chosen by <b>cross-validated ROC-AUC</b>, not by the small 61-row test set.</li>
+  </ul>
+</section>
+
+<section class="page">
+  <h3>Evaluation</h3>
+  <table>
+    <tr><th>Model</th><th class="n">CV Acc</th><th class="n">CV Prec</th><th class="n">CV Rec</th><th class="n">CV F1</th><th class="n">CV ROC-AUC</th><th class="n">Test Acc</th><th class="n">Test ROC-AUC</th></tr>
+    <tr><td><b>Logistic Regression</b></td><td class="n">0.851</td><td class="n">0.878</td><td class="n">0.792</td><td class="n">0.830</td><td class="n"><b>0.911</b></td><td class="n">0.885</td><td class="n">0.961</td></tr>
+    <tr><td>Random Forest</td><td class="n">0.818</td><td class="n">0.813</td><td class="n">0.792</td><td class="n">0.798</td><td class="n">0.900</td><td class="n">0.869</td><td class="n">0.945</td></tr>
+  </table>
+  <div class="row">
+    <div><img src="figures/logistic_regression_roc_curve.png" style="max-height:60mm"><p class="cap">Fig 5. Logistic Regression ROC curve (test)</p></div>
+    <div><img src="figures/logistic_regression_confusion_matrix.png" style="max-height:60mm"><p class="cap">Fig 6. Logistic Regression confusion matrix (test)</p></div>
+  </div>
+  <div class="row">
+    <div><img src="figures/random_forest_roc_curve.png" style="max-height:60mm"><p class="cap">Fig 7. Random Forest ROC curve (test)</p></div>
+    <div><img src="figures/random_forest_confusion_matrix.png" style="max-height:60mm"><p class="cap">Fig 8. Random Forest confusion matrix (test)</p></div>
+  </div>
+  <p><b>Why Logistic Regression.</b> It scores higher on every cross-validated metric. Its coefficients are directly interpretable, which matters in a clinical setting. It is also tiny and fast to serve. On only 303 rows, the Random Forest's extra capacity adds variance without improving accuracy. Test recall of 0.93 means 26 of 28 disease cases are caught, which is the priority for a screening tool.</p>
+</section>
+
+<!-- 5. Tracking -->
+<section class="page">
+  <h2>5. Experiment tracking</h2>
+  <p>MLflow (file store <code>./mlruns</code>, experiment <code>heart-disease</code>) logs one run per candidate model for each training execution:</p>
+  <ul>
+    <li><b>Parameters:</b> model type and the best hyperparameters from the grid search.</li>
+    <li><b>Metrics:</b> 5 CV metrics (accuracy, precision, recall, F1, ROC-AUC) and the same 5 on the test set.</li>
+    <li><b>Artifacts:</b> ROC curve and confusion matrix PNGs, plus the full sklearn pipeline as an MLflow model with an input example.</li>
+  </ul>
+  <p>Training ran three times (CLI, notebook, local CI) with identical results, which confirms reproducibility with fixed seeds.</p>
+  <img src="../screenshots/01_mlflow_runs.png" style="max-height:95mm">
+  <p class="cap">Fig 9. MLflow experiment with all tracked runs</p>
+  <img src="../screenshots/02_mlflow_run_detail.png" style="max-height:105mm">
+  <p class="cap">Fig 10. Run detail: parameters and metrics for the selected Logistic Regression</p>
+</section>
+
+<!-- 6. Packaging -->
+<section class="page">
+  <h2>6. Model packaging and reproducibility</h2>
+  <ul>
+    <li><b>Format:</b> the fitted <code>Pipeline</code> (preprocessing + model) is saved to <code>models/model.joblib</code>. The same pipeline is also logged as an MLflow model, with <code>MLmodel</code>, <code>conda.yaml</code> and <code>requirements.txt</code> generated by MLflow.</li>
+    <li><b>Metadata:</b> <code>models/metrics.json</code> stores the selected model, the best parameters, the run IDs and all metrics.</li>
+    <li><b>Environment:</b> every dependency is pinned in <code>requirements.txt</code> (training) and <code>requirements-api.txt</code> (serving).</li>
+    <li><b>Determinism:</b> one <code>RANDOM_STATE = 42</code> covers the split, the CV folds and the models. The column lists and paths are defined once in <code>src/config.py</code>.</li>
+    <li><b>Same code path:</b> the API calls <code>src.predict.predict()</code>, the same function the notebooks and CLI use, so training/serving skew is impossible by construction.</li>
+  </ul>
+
+  <h2 style="margin-top:18px">7. CI/CD pipeline and automated testing</h2>
+  <h3>Unit tests (<code>tests/</code>, 14 tests)</h3>
+  <table>
+    <tr><th>File</th><th>What is verified</th></tr>
+    <tr><td>test_data.py</td><td>no missing values after cleaning, target binarisation, all features kept, duplicate removal, input not mutated</td></tr>
+    <tr><td>test_model.py</td><td>preprocessor output shape and no NaNs, unseen category handled, predict output contract, end-to-end train() with MLflow into a temp dir</td></tr>
+    <tr><td>test_api.py</td><td>/health, /predict returns a prediction and confidence plus a request id, 422 on a missing field, 422 on an out-of-range value, /metrics exposed</td></tr>
+  </table>
+  <h3>GitHub Actions (<code>.github/workflows/ci.yml</code>)</h3>
+  <p>Triggered on push to <code>main</code>, on pull requests, and manually. Job <b>lint-test-train</b>: checkout → Python 3.11 with pip cache → install → <b>flake8</b> → <b>pytest</b> (JUnit XML) → download data → EDA → train. It uploads <code>test-results.xml</code>, <code>train.log</code>, <code>models/</code>, the figures and <code>mlruns/</code> as workflow artifacts, even on failure. Job <b>docker</b> (needs the first job): builds the image from the trained model, runs it, and smoke-tests <code>/health</code> and <code>/predict</code>, failing if the response lacks <code>confidence</code>. Container logs are always printed.</p>
+  <p><code>scripts/ci_local.sh</code> runs the same steps locally with <code>set -euo pipefail</code>.</p>
+  <img src="../screenshots/03_pytest.png" style="max-height:80mm">
+  <p class="cap">Fig 11. pytest: 14 passed</p>
+</section>
+
+<section class="page">
+  <img src="../screenshots/05_ci_pass.png" style="max-height:150mm">
+  <p class="cap">Fig 12. Full pipeline run: every stage passes</p>
+  <img src="../screenshots/06_ci_fail.png" style="max-height:95mm">
+  <p class="cap">Fig 13. Fail-fast: an injected lint error, and separately a failing test, each stop the pipeline with exit code 1 and clear logs</p>
+  <div class="note">GitHub Actions run screenshots are added after the repository is pushed and the first workflow run finishes.</div>
+</section>
+
+<!-- 8. Container -->
+<section class="page">
+  <h2>8. Containerization and API</h2>
+  <ul>
+    <li><b>Image:</b> <code>python:3.11-slim</code>, runtime dependencies only, non-root <code>appuser</code>, Docker <code>HEALTHCHECK</code> on <code>/health</code>, model baked in at <code>/app/models/model.joblib</code>.</li>
+    <li><b>Endpoints:</b> <code>POST /predict</code> (JSON in; prediction, label, probability and confidence out), <code>GET /health</code>, <code>GET /metrics</code> (Prometheus), <code>/docs</code> (Swagger).</li>
+    <li><b>Validation:</b> a Pydantic schema with range checks on every field. Bad input gets <code>422</code> with a clear message.</li>
+    <li>Each response carries an <code>x-request-id</code> header for tracing.</li>
+  </ul>
+<pre>POST /predict  {"age":63,"sex":1,"cp":4,"trestbps":145,"chol":233,"fbs":1,"restecg":2,
+                "thalach":150,"exang":1,"oldpeak":2.3,"slope":3,"ca":2,"thal":7}
+→ 200 {"prediction":1,"label":"disease","probability_disease":0.9478,"confidence":0.9478,"model_version":"1.0.0"}</pre>
+  <img src="../screenshots/07_docker_compose.png" style="max-height:55mm">
+  <p class="cap">Fig 14. Docker Compose stack: API (healthy), Prometheus, Grafana</p>
+  <img src="../screenshots/08_curl_predict.png" style="max-height:60mm">
+  <p class="cap">Fig 15. Container proof: health check, a valid prediction, and a rejected invalid request</p>
+</section>
+
+<section class="page">
+  <img src="../screenshots/09_swagger_predict.png" style="max-height:245mm">
+  <p class="cap">Fig 16. Swagger UI: /predict executed against the container</p>
+</section>
+
+<!-- 9. Deployment -->
+<section class="page">
+  <h2>9. Production deployment (Kubernetes)</h2>
+  <p>The target is the local Kubernetes cluster that ships with Docker Desktop (context <code>docker-desktop</code>). The Docker image is used directly with <code>imagePullPolicy: IfNotPresent</code>. Two equivalent deployment methods are provided and both are running:</p>
+  <table>
+    <tr><th></th><th>Raw manifest</th><th>Helm chart</th></tr>
+    <tr><td>Source</td><td><code>k8s/deployment.yaml</code></td><td><code>helm/heart-api</code> (values.yaml)</td></tr>
+    <tr><td>Namespace</td><td>heart-disease</td><td>heart-disease-helm</td></tr>
+    <tr><td>Replicas</td><td>2</td><td>2 (configurable)</td></tr>
+    <tr><td>Exposure</td><td>LoadBalancer → localhost:8020</td><td>LoadBalancer → localhost:8030 (Ingress optional)</td></tr>
+  </table>
+  <p>Both use readiness and liveness probes on <code>/health</code>, CPU and memory requests and limits, and <code>prometheus.io/scrape</code> annotations. The Helm chart passes <code>helm lint</code>. Moving to a cloud cluster (GKE/EKS/AKS) only means pushing the image to a registry and changing <code>image.repository</code>.</p>
+  <img src="../screenshots/10_k8s_manifest.png" style="max-height:70mm">
+  <p class="cap">Fig 17. Manifest deployment: 2/2 pods running, LoadBalancer, endpoint verified</p>
+  <img src="../screenshots/11_k8s_helm.png" style="max-height:75mm">
+  <p class="cap">Fig 18. Helm release deployed and verified</p>
+</section>
+
+<!-- 10. Monitoring -->
+<section class="page">
+  <h2>10. Monitoring and logging</h2>
+  <ul>
+    <li><b>Logging:</b> an HTTP middleware writes one JSON line per request (request_id, method, path, status, latency_ms). Each prediction also logs its input and output. The logs go to stdout, so <code>docker logs</code> or <code>kubectl logs</code> collect them.</li>
+    <li><b>Metrics:</b> <code>api_requests_total{method,endpoint,status}</code>, the histogram <code>api_request_latency_seconds{endpoint}</code>, and <code>model_predictions_total{label}</code> (watches for drift in the class mix).</li>
+    <li><b>Prometheus</b> scrapes <code>api:8000/metrics</code> every 5 s. <b>Grafana</b> is provisioned automatically with the data source and the "Heart Disease API" dashboard.</li>
+  </ul>
+  <img src="../screenshots/14_api_logs.png" style="max-height:45mm">
+  <p class="cap">Fig 19. Structured JSON request and prediction logs</p>
+  <img src="../screenshots/15_grafana_dashboard.png" style="max-height:105mm">
+  <p class="cap">Fig 20. Grafana: total predictions, error rate, p95 latency, class mix, request rate and latency percentiles</p>
+  <img src="../screenshots/12_prometheus_targets.png" style="max-height:48mm">
+  <p class="cap">Fig 21. Prometheus target healthy</p>
+</section>
+
+<!-- 11. Architecture -->
+<section class="page">
+  <h2>11. Architecture, deliverables and repository</h2>
+  <img src="figures/architecture.png">
+  <p class="cap">Fig 22. End-to-end architecture</p>
+  <h3>Deliverables checklist</h3>
+  <table>
+    <tr><th>Deliverable</th><th>Location</th></tr>
+    <tr><td>Code, Dockerfile, requirements</td><td><code>src/</code>, <code>api/</code>, <code>Dockerfile</code>, <code>docker-compose.yml</code>, <code>requirements*.txt</code></td></tr>
+    <tr><td>Cleaned dataset + download script</td><td><code>data/processed/heart_clean.csv</code>, <code>src/data.py</code></td></tr>
+    <tr><td>Notebooks (EDA, training, inference)</td><td><code>notebooks/01_eda.ipynb</code>, <code>02_training.ipynb</code>, <code>03_inference.ipynb</code></td></tr>
+    <tr><td>Unit tests</td><td><code>tests/</code> (14 tests)</td></tr>
+    <tr><td>CI workflow</td><td><code>.github/workflows/ci.yml</code>, <code>scripts/ci_local.sh</code></td></tr>
+    <tr><td>Deployment manifests / Helm</td><td><code>k8s/deployment.yaml</code>, <code>helm/heart-api/</code></td></tr>
+    <tr><td>Screenshots</td><td><code>screenshots/</code></td></tr>
+    <tr><td>Report</td><td><code>report/report.pdf</code></td></tr>
+    <tr><td>Access instructions</td><td>Section 2 and <code>README.md</code></td></tr>
+    <tr><td>Pipeline video</td><td><code>video/pipeline_demo.webm</code></td></tr>
+  </table>
+  <h3>Repository</h3>
+  <p><b>&lt;add GitHub URL&gt;</b></p>
+  <h3>Limitations and next steps</h3>
+  <ul>
+    <li>The dataset is small (303 rows) and comes from one site. Validating on the Hungarian, Swiss and VA subsets would test how well the model generalises.</li>
+    <li>Possible next steps: an MLflow Model Registry with staged promotion, pushing images to a container registry from CI, data-drift detection on the logged inputs, and HPA autoscaling.</li>
+  </ul>
+</section>
+
+</body></html>

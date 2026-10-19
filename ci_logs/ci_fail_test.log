@@ -1,0 +1,31 @@
+
+===== [11:05:31] Lint (flake8) =====
+flake8: no issues
+
+===== [11:05:32] Unit tests (pytest) =====
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-8.3.3, pluggy-1.7.0
+rootdir: D:\mlops
+configfile: setup.cfg
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.13.5
+collected 15 items
+
+tests\test_api.py .....                                                  [ 33%]
+tests\test_data.py .....                                                 [ 66%]
+tests\test_model.py ....                                                 [ 93%]
+tests\test_zz_failure_demo.py F                                          [100%]
+
+================================== FAILURES ===================================
+_________________________________ test_broken _________________________________
+
+    def test_broken():
+>       assert 1 == 2
+E       assert 1 == 2
+
+tests\test_zz_failure_demo.py:2: AssertionError
+---------------- generated xml file: D:\mlops\test-results.xml ----------------
+=========================== short test summary info ===========================
+FAILED tests/test_zz_failure_demo.py::test_broken - assert 1 == 2
+======================== 1 failed, 14 passed in 8.70s =========================
+exit=1

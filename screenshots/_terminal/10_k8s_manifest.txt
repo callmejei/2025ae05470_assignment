@@ -1,0 +1,13 @@
+$ kubectl --context docker-desktop -n heart-disease get deploy,pods,svc
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/heart-api   2/2     2            2           8m8s
+
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/heart-api-594455469d-cgjjb   1/1     Running   0          8m8s
+pod/heart-api-594455469d-rmkmg   1/1     Running   0          8m8s
+
+NAME                TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/heart-api   LoadBalancer   10.96.233.154   172.18.0.5    8020:30537/TCP   8m8s
+
+$ curl -X POST localhost:8020/predict -d @sample_request.json
+{"prediction":1,"label":"disease","probability_disease":0.9478,"confidence":0.9478,"model_version":"1.0.0"}

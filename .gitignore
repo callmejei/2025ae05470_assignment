@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.pytest_cache/
+mlruns/
+mlartifacts/
+data/raw/
+*.log
+test-results.xml
+video/_raw/
+predict.json
+train.log
+!ci_logs/*.log

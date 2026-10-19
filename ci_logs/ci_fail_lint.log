@@ -1,0 +1,4 @@
+
+===== [11:05:25] Lint (flake8) =====
+tests\test_zz_failure_demo.py:1:1: F401 'os' imported but unused
+exit=1

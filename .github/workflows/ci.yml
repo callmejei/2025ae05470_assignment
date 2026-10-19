@@ -1,0 +1,73 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint-test-train:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint
+        run: flake8 src api tests
+
+      - name: Unit tests
+        run: pytest --junitxml=test-results.xml
+
+      - name: Download & clean data
+        run: python -m src.data
+
+      - name: EDA figures
+        run: python -m src.eda
+
+      - name: Train & track
+        run: python -m src.train 2>&1 | tee train.log
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: training-artifacts
+          path: |
+            test-results.xml
+            train.log
+            models/
+            report/figures/
+            mlruns/
+
+  docker:
+    needs: lint-test-train
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: training-artifacts
+
+      - name: Build image
+        run: docker build -t heart-disease-api:${{ github.sha }} .
+
+      - name: Smoke test container
+        run: |
+          docker run -d --name api -p 8000:8000 heart-disease-api:${{ github.sha }}
+          for i in $(seq 1 30); do curl -sf localhost:8000/health && break; sleep 1; done
+          curl -sf -X POST localhost:8000/predict \
+            -H 'Content-Type: application/json' -d @sample_request.json | tee predict.json
+          grep -q '"confidence"' predict.json
+
+      - name: Container logs
+        if: always()
+        run: docker logs api || true

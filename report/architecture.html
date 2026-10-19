@@ -1,0 +1,180 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Architecture</title>
+<style>
+  body { margin: 0; background: #fff; font-family: "Segoe UI", Arial, sans-serif; }
+  svg text { font-family: "Segoe UI", Arial, sans-serif; }
+</style></head>
+<body>
+<svg id="diagram" xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .lane { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; rx: 14; }
+      .lt { font-size: 15px; font-weight: 700; fill: #334155; letter-spacing: .5px; }
+      .box { stroke-width: 1.8; rx: 10; }
+      .t { font-size: 15px; font-weight: 600; fill: #0f172a; }
+      .s { font-size: 12.5px; fill: #475569; }
+      .ln { stroke: #475569; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+      .dash { stroke-dasharray: 6 5; }
+      .el { font-size: 12px; fill: #475569; font-style: italic; }
+    </style>
+  </defs>
+
+  <text x="700" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">Heart Disease Risk — MLOps Architecture</text>
+
+  <!-- Lanes -->
+  <rect class="lane" x="20" y="60" width="1360" height="190"/>
+  <text class="lt" x="40" y="86">1 · DATA &amp; EXPERIMENTATION</text>
+  <rect class="lane" x="20" y="270" width="1360" height="160"/>
+  <text class="lt" x="40" y="296">2 · CI/CD (GitHub Actions · scripts/ci_local.sh)</text>
+  <rect class="lane" x="20" y="450" width="1360" height="290"/>
+  <text class="lt" x="40" y="476">3 · SERVING &amp; MONITORING (local Docker Desktop)</text>
+
+  <!-- Lane 1 -->
+  <g>
+    <rect class="box" x="45" y="110" width="190" height="110" fill="#e0f2fe" stroke="#0284c7"/>
+    <text class="t" x="140" y="140" text-anchor="middle">UCI Repository</text>
+    <text class="s" x="140" y="162" text-anchor="middle">processed.cleveland.data</text>
+    <text class="s" x="140" y="180" text-anchor="middle">303 rows · 13 features</text>
+    <text class="s" x="140" y="198" text-anchor="middle">'?' = missing</text>
+
+    <rect class="box" x="285" y="110" width="200" height="110" fill="#e0f2fe" stroke="#0284c7"/>
+    <text class="t" x="385" y="140" text-anchor="middle">src/data.py</text>
+    <text class="s" x="385" y="162" text-anchor="middle">download · dedupe</text>
+    <text class="s" x="385" y="180" text-anchor="middle">mode-impute ca/thal</text>
+    <text class="s" x="385" y="198" text-anchor="middle">num&gt;0 → target</text>
+
+    <rect class="box" x="535" y="110" width="190" height="110" fill="#e0f2fe" stroke="#0284c7"/>
+    <text class="t" x="630" y="140" text-anchor="middle">src/eda.py</text>
+    <text class="s" x="630" y="162" text-anchor="middle">01_eda.ipynb</text>
+    <text class="s" x="630" y="180" text-anchor="middle">histograms · heatmap</text>
+    <text class="s" x="630" y="198" text-anchor="middle">class balance</text>
+
+    <rect class="box" x="775" y="110" width="240" height="110" fill="#ede9fe" stroke="#7c3aed"/>
+    <text class="t" x="895" y="140" text-anchor="middle">src/train.py</text>
+    <text class="s" x="895" y="162" text-anchor="middle">ColumnTransformer (scale + one-hot)</text>
+    <text class="s" x="895" y="180" text-anchor="middle">GridSearchCV · 5-fold stratified</text>
+    <text class="s" x="895" y="198" text-anchor="middle">LogReg vs RandomForest</text>
+
+    <rect class="box" x="1065" y="100" width="150" height="62" fill="#fef3c7" stroke="#d97706"/>
+    <text class="t" x="1140" y="126" text-anchor="middle">MLflow</text>
+    <text class="s" x="1140" y="146" text-anchor="middle">params · metrics · plots</text>
+
+    <rect class="box" x="1065" y="172" width="150" height="62" fill="#dcfce7" stroke="#16a34a"/>
+    <text class="t" x="1140" y="198" text-anchor="middle">model.joblib</text>
+    <text class="s" x="1140" y="218" text-anchor="middle">full sklearn Pipeline</text>
+
+    <rect class="box" x="1250" y="130" width="115" height="70" fill="#fff" stroke="#94a3b8"/>
+    <text class="t" x="1307" y="158" text-anchor="middle">MLflow UI</text>
+    <text class="s" x="1307" y="178" text-anchor="middle">:5005</text>
+
+    <path class="ln" d="M235,165 H283"/>
+    <path class="ln" d="M485,165 H533"/>
+    <path class="ln" d="M725,165 H773"/>
+    <path class="ln" d="M1015,150 L1063,132"/>
+    <path class="ln" d="M1015,185 L1063,200"/>
+    <path class="ln" d="M1215,131 L1248,155"/>
+  </g>
+
+  <!-- Lane 2 -->
+  <g>
+    <rect class="box" x="45" y="320" width="150" height="80" fill="#f1f5f9" stroke="#64748b"/>
+    <text class="t" x="120" y="352" text-anchor="middle">git push / PR</text>
+    <text class="s" x="120" y="374" text-anchor="middle">main branch</text>
+
+    <rect class="box" x="240" y="320" width="130" height="80" fill="#fee2e2" stroke="#dc2626"/>
+    <text class="t" x="305" y="352" text-anchor="middle">Lint</text>
+    <text class="s" x="305" y="374" text-anchor="middle">flake8</text>
+
+    <rect class="box" x="410" y="320" width="150" height="80" fill="#fee2e2" stroke="#dc2626"/>
+    <text class="t" x="485" y="352" text-anchor="middle">Unit tests</text>
+    <text class="s" x="485" y="374" text-anchor="middle">pytest · 14 tests</text>
+
+    <rect class="box" x="600" y="320" width="170" height="80" fill="#ede9fe" stroke="#7c3aed"/>
+    <text class="t" x="685" y="352" text-anchor="middle">Data → EDA → Train</text>
+    <text class="s" x="685" y="374" text-anchor="middle">MLflow runs logged</text>
+
+    <rect class="box" x="810" y="320" width="170" height="80" fill="#dbeafe" stroke="#2563eb"/>
+    <text class="t" x="895" y="352" text-anchor="middle">Docker build</text>
+    <text class="s" x="895" y="374" text-anchor="middle">python:3.11-slim</text>
+
+    <rect class="box" x="1020" y="320" width="170" height="80" fill="#dbeafe" stroke="#2563eb"/>
+    <text class="t" x="1105" y="352" text-anchor="middle">Smoke test</text>
+    <text class="s" x="1105" y="374" text-anchor="middle">/health + /predict</text>
+
+    <rect class="box" x="1230" y="320" width="135" height="80" fill="#dcfce7" stroke="#16a34a"/>
+    <text class="t" x="1297" y="352" text-anchor="middle">Artifacts</text>
+    <text class="s" x="1297" y="374" text-anchor="middle">model · logs · plots</text>
+
+    <path class="ln" d="M195,360 H238"/>
+    <path class="ln" d="M370,360 H408"/>
+    <path class="ln" d="M560,360 H598"/>
+    <path class="ln" d="M770,360 H808"/>
+    <path class="ln" d="M980,360 H1018"/>
+    <path class="ln" d="M1190,360 H1228"/>
+    <text class="el" x="560" y="418" text-anchor="middle">any failing step stops the pipeline (non-zero exit, logs kept)</text>
+  </g>
+
+  <!-- Lane 3 -->
+  <g>
+    <rect class="box" x="45" y="510" width="180" height="90" fill="#dbeafe" stroke="#2563eb"/>
+    <text class="t" x="135" y="540" text-anchor="middle">Docker image</text>
+    <text class="s" x="135" y="562" text-anchor="middle">heart-disease-api</text>
+    <text class="s" x="135" y="580" text-anchor="middle">FastAPI + model</text>
+
+    <!-- compose -->
+    <rect x="280" y="495" width="560" height="225" rx="12" fill="none" stroke="#2563eb" stroke-width="1.5" class="dash"/>
+    <text class="s" x="295" y="515" font-weight="700" fill="#1d4ed8">docker compose (heart-mlops)</text>
+
+    <rect class="box" x="300" y="530" width="170" height="100" fill="#fff" stroke="#2563eb"/>
+    <text class="t" x="385" y="558" text-anchor="middle">API :8010</text>
+    <text class="s" x="385" y="578" text-anchor="middle">POST /predict</text>
+    <text class="s" x="385" y="595" text-anchor="middle">GET /health · /metrics</text>
+    <text class="s" x="385" y="612" text-anchor="middle">JSON request logs</text>
+
+    <rect class="box" x="510" y="530" width="140" height="70" fill="#ffedd5" stroke="#ea580c"/>
+    <text class="t" x="580" y="558" text-anchor="middle">Prometheus</text>
+    <text class="s" x="580" y="578" text-anchor="middle">:9095 · 5s scrape</text>
+
+    <rect class="box" x="690" y="530" width="135" height="70" fill="#ffedd5" stroke="#ea580c"/>
+    <text class="t" x="757" y="558" text-anchor="middle">Grafana</text>
+    <text class="s" x="757" y="578" text-anchor="middle">:3005 dashboard</text>
+
+    <path class="ln" d="M508,565 H472"/>
+    <text class="el" x="490" y="650" text-anchor="middle">scrape /metrics</text>
+    <path class="ln" d="M688,565 H652"/>
+
+    <!-- k8s -->
+    <rect x="880" y="495" width="485" height="225" rx="12" fill="none" stroke="#7c3aed" stroke-width="1.5" class="dash"/>
+    <text class="s" x="895" y="515" font-weight="700" fill="#6d28d9">Kubernetes (docker-desktop context)</text>
+
+    <rect class="box" x="900" y="530" width="215" height="80" fill="#f5f3ff" stroke="#7c3aed"/>
+    <text class="t" x="1007" y="556" text-anchor="middle">k8s/deployment.yaml</text>
+    <text class="s" x="1007" y="576" text-anchor="middle">ns heart-disease · 2 replicas</text>
+    <text class="s" x="1007" y="594" text-anchor="middle">LoadBalancer :8020</text>
+
+    <rect class="box" x="1135" y="530" width="215" height="80" fill="#f5f3ff" stroke="#7c3aed"/>
+    <text class="t" x="1242" y="556" text-anchor="middle">helm/heart-api</text>
+    <text class="s" x="1242" y="576" text-anchor="middle">ns heart-disease-helm · 2 pods</text>
+    <text class="s" x="1242" y="594" text-anchor="middle">LoadBalancer :8030</text>
+
+    <text class="s" x="1122" y="645" text-anchor="middle">readiness/liveness probes on /health · CPU/memory limits</text>
+    <text class="s" x="1122" y="665" text-anchor="middle">prometheus.io/scrape annotations · optional Ingress</text>
+
+    <path class="ln" d="M225,555 H298"/>
+    <path class="ln" d="M135,600 V728 H1007 V612"/>
+    <path class="ln" d="M1007,728 H1242 V612"/>
+
+    <rect class="box" x="300" y="655" width="170" height="50" fill="#f1f5f9" stroke="#64748b"/>
+    <text class="t" x="385" y="685" text-anchor="middle">Client (JSON)</text>
+    <path class="ln" d="M385,655 V632"/>
+  </g>
+
+  <!-- cross-lane -->
+  <path class="ln dash" d="M1140,234 V258 H1297 V318"/>
+  <path class="ln dash" d="M895,400 V430 H135 V508"/>
+  <text class="el" x="500" y="444">image built from repo + models/model.joblib</text>
+</svg>
+</body></html>

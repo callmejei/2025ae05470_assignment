@@ -90,7 +90,7 @@ def main():
         show_terminal(page, "06_ci_fail",
                       "The pipeline fails fast on a lint error or failing test (exit code 1)")
 
-        page.goto(REPO + "/actions/runs/39209666196")
+        page.goto(REPO + "/actions/runs/39377167666")
         page.wait_for_timeout(3000)
         caption(page, "GitHub Actions: lint-test-train → docker, both green on every push", 4000)
         page.get_by_role("link", name="lint-test-train").first.click()

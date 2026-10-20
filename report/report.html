@@ -267,12 +267,10 @@ helm --kube-context docker-desktop upgrade --install heart-api helm/heart-api \
 <section class="page">
   <h3>GitHub Actions runs</h3>
   <img src="../screenshots/17_github_actions_run_success.png" style="max-height:105mm">
-  <p class="cap">Fig 14. GitHub Actions run #2: lint-test-train then docker, both green (1 min 53 s, 1 artifact)</p>
+  <p class="cap">Fig 14. GitHub Actions run on the submission repository: lint-test-train then docker, both green (2 min 5 s, 1 artifact)</p>
   <img src="../screenshots/18_github_actions_job_steps.png" style="max-height:105mm">
   <p class="cap">Fig 15. lint-test-train job steps: lint, unit tests, data, EDA, train, artifact upload</p>
-  <p>Run #1 failed at <b>Unit tests</b>. CI calls <code>pytest</code> directly, which does not put the repo root on <code>sys.path</code>, so <code>import src</code> failed. The data, training and docker steps were skipped, which is the expected fail-fast behaviour. Adding <code>pythonpath = .</code> to the pytest config fixed it in run #2.</p>
-  <img src="../screenshots/19_github_actions_run_failed.png" style="max-height:70mm">
-  <p class="cap">Fig 16. Run #1 stopped at the failing step; later jobs skipped</p>
+  <p>During development, the first CI run failed at <b>Unit tests</b>. CI calls <code>pytest</code> directly, which does not put the repo root on <code>sys.path</code>, so <code>import src</code> failed and the data, training and docker steps were skipped (fail-fast). Adding <code>pythonpath = .</code> to the pytest config fixed it. Fail-fast behaviour on lint and test errors is also shown in Fig 16.</p>
 </section>
 
 <!-- 8. Container -->

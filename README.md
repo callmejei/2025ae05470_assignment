@@ -33,7 +33,7 @@ GitHub Actions: lint ► pytest ► train ► docker build ► smoke test
 | `helm/heart-api/` | The same deployment as a Helm chart, with an optional Ingress |
 | `scripts/ci_local.sh` | Runs the CI steps locally and stops on the first failure |
 | `scripts/capture_screenshots.py`, `scripts/record_demo.py` | Regenerate `screenshots/` and `video/` from the running stack (Playwright + local Chrome) |
-| `report/report.pdf` | Final written report |
+| `report/2025ae05470_report_local_pc.pdf` | Final written report |
 | `monitoring/` | Prometheus scrape config and a pre-provisioned Grafana dashboard |
 | `.github/workflows/ci.yml` | CI pipeline |
 
@@ -128,8 +128,8 @@ Out-of-range or missing fields get a `422` response.
 
 | Item | Location |
 |------|----------|
-| Report (16 pages, PDF) | `report/report.pdf` (source `report/report.html`) |
-| Lab implementation report (8 pages, PDF) | `report/lab_report.pdf`: the pipeline reproduced on the BITS Prayogshala MLOps lab VM |
+| Report (16 pages, PDF) | `report/2025ae05470_report_local_pc.pdf` (source `report/report.html`) |
+| Lab implementation report (8 pages, PDF) | `report/2025ae05470_prayogshala_lab_report.pdf`: the pipeline reproduced on the BITS Prayogshala MLOps lab VM |
 | Architecture diagram | `report/figures/architecture.png` |
 | Screenshots | `screenshots/` (MLflow, tests, local and GitHub Actions CI runs, Docker, Swagger, Kubernetes, Helm, Prometheus, logs, Grafana) |
 | Pipeline video | `video/pipeline_demo.mp4`, 1 min 48 s captioned walkthrough including GitHub Actions |
@@ -143,4 +143,4 @@ git clone https://github.com/callmejei/mlops_2025ae05470_assignment.git
 bash mlops_2025ae05470_assignment/scripts/lab_setup.sh 2>&1 | tee ~/workspace/lab_setup.log
 ```
 
-This runs the CI pipeline, starts Docker Compose, deploys to minikube (manifest and Helm, exposed via `minikube tunnel`), starts the MLflow UI and checks every endpoint. The evidence is in `report/lab_report.pdf` and `screenshots/lab/`.
+This runs the CI pipeline, starts Docker Compose, deploys to minikube (manifest and Helm, exposed via `minikube tunnel`), starts the MLflow UI and checks every endpoint. The evidence is in `report/2025ae05470_prayogshala_lab_report.pdf` and `screenshots/lab/`.

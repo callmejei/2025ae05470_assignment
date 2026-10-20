@@ -13,7 +13,7 @@ from capture_screenshots import ROOT, TERM, experiment_id, terminal_html
 VIDEO_DIR = ROOT / "video"
 STUDENT = "Jeyaram M · 2025AE05470"
 COURSE = "Machine Learning Operations (MLOps) · AIMLCZG523 · Assignment 01"
-REPO = "https://github.com/callmejei/mlops_2025ae05470_assignment"
+REPO = "https://github.com/callmejei/2025ae05470_assignment"
 SIZE = {"width": 1280, "height": 720}
 
 CAPTION_JS = """([t, who]) => {

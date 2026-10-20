@@ -3,7 +3,7 @@
 **Machine Learning Operations (MLOps) · AIMLCZG523 · Assignment 01**
 **Student:** Jeyaram M · **ID:** 2025AE05470
 
-Repository: https://github.com/callmejei/mlops_2025ae05470_assignment
+Repository: https://github.com/callmejei/2025ae05470_assignment
 
 A classifier trained on the UCI Heart Disease (Cleveland) dataset. It's served as a FastAPI service in Docker, deployed to local Kubernetes and monitored with Prometheus and Grafana.
 
@@ -139,8 +139,8 @@ Out-of-range or missing fields get a `422` response.
 
 ```bash
 cd ~/workspace
-git clone https://github.com/callmejei/mlops_2025ae05470_assignment.git
-bash mlops_2025ae05470_assignment/scripts/lab_setup.sh 2>&1 | tee ~/workspace/lab_setup.log
+git clone https://github.com/callmejei/2025ae05470_assignment.git
+bash 2025ae05470_assignment/scripts/lab_setup.sh 2>&1 | tee ~/workspace/lab_setup.log
 ```
 
 This runs the CI pipeline, starts Docker Compose, deploys to minikube (manifest and Helm, exposed via `minikube tunnel`), starts the MLflow UI and checks every endpoint. The evidence is in `report/2025ae05470_prayogshala_lab_report.pdf` and `screenshots/lab/`.

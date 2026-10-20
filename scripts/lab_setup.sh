@@ -2,8 +2,8 @@
 # Reproduce the whole pipeline on the BITS Prayogshala MLOps lab VM
 # (Rocky Linux 9, conda Python 3.12, Docker, minikube).
 #
-#   cd ~/workspace && git clone https://github.com/callmejei/mlops_2025ae05470_assignment.git
-#   bash ~/workspace/mlops_2025ae05470_assignment/scripts/lab_setup.sh
+#   cd ~/workspace && git clone https://github.com/callmejei/2025ae05470_assignment.git
+#   bash ~/workspace/2025ae05470_assignment/scripts/lab_setup.sh
 #
 # The repo lives in ~/workspace (persistent). The virtualenv and helm binary
 # live outside it: they are fast to recreate and EFS is slow for many small files.

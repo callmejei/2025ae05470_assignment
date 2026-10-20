@@ -13,3 +13,4 @@ train.log
 video/*.webm
 .playwright-mcp/
 Prayogshala_Virtual_Lab_Manual.pdf
+Screenshot *.png
